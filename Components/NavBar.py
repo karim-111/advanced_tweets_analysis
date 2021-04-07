@@ -23,19 +23,15 @@ navbar = dbc.Navbar(
             # Use row and col to control vertical alignment of logo / brand
             dbc.Row(
                 [
-                    dbc.Col(html.Img(src=PLOTLY_LOGO, height="30px")),
-                    dbc.Col(dbc.NavbarBrand("Navbar", className="ml-2")),
+                    dbc.Col(html.Img(src=("/assets/Logo.png"), height="30px")),
+                    dbc.Col(dbc.NavbarBrand("TweeMusk", className="ml-2")),
                 ],
                 align="center",
                 no_gutters=True,
             ),
             href="https://plot.ly",
         ),
-        dbc.NavbarToggler(id="navbar-toggler"),
-        dbc.Collapse(search_bar, id="navbar-collapse", navbar=True),
     ],
     color="dark",
     dark=True,
 )
-
-

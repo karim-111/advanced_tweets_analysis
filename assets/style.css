@@ -82,3 +82,10 @@ margin : auto;
 }
 
 /*-------------------------------------------------------*/
+
+.TabStyle{
+width : 30vh;
+box-shadow: 1px  1px black  ;
+font-size : 17px
+
+}
