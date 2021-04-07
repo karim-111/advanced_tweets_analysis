@@ -1,0 +1,84 @@
+/* Home_Page*/
+
+.first{
+display: flex;
+flex-direction : column;
+background-color : 'white';
+height : 100vh;
+background-image : url("/assets/2.jpg");
+background-size: cover;
+background-position: center;
+background-repeat:no-repeat;
+
+}
+.hh{
+  height : 80px;
+  width: 80px;
+
+}
+.formulaire{
+padding : 10px;
+}
+.inputAndSubmit{
+padding : 30px;
+display : flex;
+flex-direction : column;
+align-items:center;
+
+}
+.hhhhhhhhhhh{
+margin-top : 10px;
+width : 200px;
+height : 50px;
+font: italic 1.2em "Fira Sans", serif;
+font-size: 25px ;
+font-weight: bolder;
+background-color : #8de3fb;
+color : #0f5587
+}
+.trrrrr{
+margin : auto;
+padding : 30px;
+border-radius : 10px;
+width: 100vh;
+background-color: #dbebf2;
+border: 1px solid black;
+opacity: 0.97 ;
+box-shadow: 5px 3px 3px black  ;
+}
+.theParagraph{
+color : #0f5587;
+font: italic 1.2em "Fira Sans", serif;
+font-size: 32px ;
+font-weight: bolder;
+margin-left : 8vh;
+margin-right : 8vh;
+margin-bottom :1vh
+}
+.LogoAndTitle{
+display: flex;
+padding-top:10px;
+padding-bottom:7px;
+padding-left : 10vh;
+background-color: #8de3fb;
+border-radius: 5px;
+border-bottom: 2px solid blue;
+
+}
+.titre{
+color : #0f5587;
+font: italic 1.2em "Fira Sans", serif;
+font-size: 62px ;
+font-weight: bolder;
+margin-left : 6vh;
+
+}
+.second{
+flex-direction : column;
+align-items: center;
+justify-content: center;
+width : 50%;
+margin : auto;
+}
+
+/*-------------------------------------------------------*/
