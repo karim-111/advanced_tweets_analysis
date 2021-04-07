@@ -7,7 +7,7 @@ import dash_bootstrap_components as dbc
 tab2_content = html.Div(
     html.Div(
         [
-            dcc.Graph(id="graph"),
+            html.Div(id='jecpas'),
 
         ]
     ),
