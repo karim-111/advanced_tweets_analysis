@@ -16,6 +16,7 @@ tab1_content = html.Div(
                                 className="hhhhhhhhhhh"),
                 ]),
             html.Div(id='table'),
+            html.Div(id='table2'),
 
         ]
     ),

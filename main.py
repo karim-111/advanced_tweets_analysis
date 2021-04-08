@@ -11,8 +11,8 @@ from API.Scraping_Tweets import search
 from dash.exceptions import PreventUpdate
 import pandas as pd
 from datetime import datetime
+from API.Cleaning_Tweets import clean
 import plotly.express as px
-
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.config.suppress_callback_exceptions = True
@@ -20,6 +20,8 @@ len_data = 3500
 
 app.layout = html.Div([
     dcc.Store(id='session',
+              data=[]),
+    dcc.Store(id="clean_df",
               data=[]),
     dcc.Location(id='url', refresh=False),
     html.Div(id='page-content')
@@ -38,7 +40,8 @@ def display_page(pathname):
         return Home_Page.layout
 
 
-## Page_Home_Callbak
+# Callback Pour la recherche des tweets
+# Et enregistrement dans le dcc.store
 @app.callback(
     Output('session', 'data'),
     Input('submit-button-state', 'n_clicks'),
@@ -52,6 +55,7 @@ def update_output_div(n_clicks, input_value):
             df = search(input_value)
             return df.to_json(date_format='iso', orient='split')
 
+
 @app.callback(Output('table', 'children'), Input('session', 'data'))
 def update_table(jsonified_cleaned_data):
     if jsonified_cleaned_data:
@@ -60,6 +64,7 @@ def update_table(jsonified_cleaned_data):
         return table
     else:
         raise PreventUpdate
+
 
 @app.callback(Output('graph1', 'figure'),
               Output('graph2', 'figure'),
