@@ -20,13 +20,19 @@ def search(word):
         tweets = tweepy.Cursor(api.search,
                                q=new_search,
                                lang="en",
-                               since=date_since).items(105)
+                               since=date_since).items(1000)
 
         # Collect a list of tweets
-        users_locs = [[tweet.created_at, tweet.text, tweet.user.screen_name, tweet.user.location, tweet.retweet_count]
+        users_locs = [[tweet.created_at,
+                       tweet.text,
+                       tweet.user.screen_name,
+                       " ".join([hashtag['text'] for hashtag in tweet.entities['hashtags']]),
+                       tweet.user.location,
+                       tweet.source,
+                       tweet.retweet_count]
                       for
                       tweet in tweets]
         df = pd.DataFrame(data=users_locs,
-                          columns=['Created_at', 'Text', 'user', 'location', 'retweet_count'])
+                          columns=['Created_at', 'Text', 'user', 'hashtags', 'location', 'source', 'retweet_count'])
 
         return df
