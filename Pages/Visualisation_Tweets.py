@@ -8,6 +8,7 @@ tab2_content = html.Div(
     html.Div(
         [
             html.Div(id='jecpas'),
+            dcc.Graph(id="idee"),
 
             dcc.Graph(id="graph1"),
             dcc.Graph(id="graph2"),

@@ -20,7 +20,7 @@ def search(word):
         tweets = tweepy.Cursor(api.search,
                                q=new_search,
                                lang="en",
-                               since=date_since).items(500)
+                               since=date_since).items(100)
 
         # Collect a list of tweets
         users_locs = [[tweet.created_at,

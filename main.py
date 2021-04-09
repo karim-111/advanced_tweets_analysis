@@ -5,9 +5,10 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import flask
+from collections import Counter
+
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
-
 from API.Utils import generate_word_cloud
 from layouts import layout1
 from Pages import Home_Page
@@ -18,6 +19,7 @@ import pandas as pd
 from datetime import datetime
 from API.Cleaning_Tweets import clean
 import plotly.express as px
+from API.Sentiment_analyse import getAnalysis, getPolarity, getSubjectivity
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.config.suppress_callback_exceptions = True
@@ -70,6 +72,7 @@ def update_table(jsonified_cleaned_data):
     else:
         raise PreventUpdate
 
+
 # Cleaning the tweets and store it
 
 @app.callback(Output('jecpas', 'children'), Output('clean_df', 'data'), Input('session', 'data'))
@@ -81,6 +84,27 @@ def update_table_clean(jsonified_cleaned_data):
         return table, df.to_json(date_format='iso', orient='split')
     else:
         return [], []
+
+
+@app.callback(Output('idee', 'figure'), Input('session', 'data'))
+def watwat(jsonified_cleaned_data):
+    if jsonified_cleaned_data:
+        df = pd.read_json(jsonified_cleaned_data, orient='split')
+
+        df['subjectivity'] = df['Text'].apply(getSubjectivity)
+        df['polarity'] = df['Text'].apply(getPolarity)
+        df['analysis'] = df['polarity'].apply(getAnalysis)
+
+        target_cnt = Counter(df.analysis)
+        df2 = pd.DataFrame.from_dict(target_cnt, orient='index').reset_index()
+        df2.columns = ['value', 'key']
+        df2
+        fig = px.bar(df2, x='value', y='key', labels={'x': 'total_bill', 'y': 'count'})
+
+        return fig
+    else:
+        raise PreventUpdate
+
 
 @app.callback(Output('graph1', 'figure'),
               Output('graph2', 'figure'),
@@ -101,17 +125,17 @@ def render_graphs(jsonified_cleaned_data):
                       labels={'x': 'Created at', 'y': "count"})
 
         fig2 = px.bar(dff, x=dff["location"].value_counts().keys(), y=dff["location"].value_counts().values,
-                      labels={'x':'location', 'y': "count"})
+                      labels={'x': 'location', 'y': "count"})
 
         user_series = dff["source"].value_counts()
         tmp1 = user_series.loc[["Twitter for Android", "Twitter for iPhone", "Twitter Web App"]]
         tmp2 = user_series.drop(["Twitter for Android", "Twitter for iPhone", "Twitter Web App"])
         tmp1["Other"] = tmp2.sum()
         fig3 = px.bar(dff, x=tmp1.keys(), y=tmp1.values,
-                      labels={'x':'source', 'y': "count"})
+                      labels={'x': 'source', 'y': "count"})
 
         fig4 = px.bar(dff, x=dff["retweet_count"].value_counts().keys(), y=dff["retweet_count"].value_counts().values,
-                      labels={'x':'retweet_count', 'y': "count"})
+                      labels={'x': 'retweet_count', 'y': "count"})
 
         users = dff["user"].value_counts().size
 
