@@ -11,7 +11,7 @@ layout = html.Div(
             children=[
                 html.Img(className="hh", src=("/assets/Logo.png")),
                 html.H1(children=" TweeMusk", className='titre'),
-            ]
+                         ]
         ),
         html.Div(
             className="second",

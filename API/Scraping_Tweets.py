@@ -11,7 +11,9 @@ auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
 api = tweepy.API(auth, wait_on_rate_limit=True)
 
 
-def search(word):
+def search(word,number):
+    location_data = []
+
     if word != "":
         search_words = word
         new_search = search_words + "-filter:retweets"
@@ -20,7 +22,7 @@ def search(word):
         tweets = tweepy.Cursor(api.search,
                                q=new_search,
                                lang="en",
-                               since=date_since).items(100)
+                               since=date_since).items(number)
 
         # Collect a list of tweets
         users_locs = [[tweet.created_at,
@@ -36,3 +38,20 @@ def search(word):
                           columns=['Created_at', 'Text', 'user', 'hashtags', 'location', 'source', 'retweet_count'])
 
         return df
+
+
+def search_by_name(name):
+    posts = api.user_timeline(screen_name=name, count=10, lang="en", tweet_mode="extended")
+    users_locs = [[
+        tweet.created_at,
+        tweet.full_text,
+        tweet.user.screen_name,
+        " ".join([hashtag['text'] for hashtag in tweet.entities['hashtags']]),
+        tweet.user.location,
+        tweet.source,
+        tweet.retweet_count
+    ] for tweet in posts]
+
+    df = pd.DataFrame(data=users_locs,
+                      columns=['Created_at', 'Text', 'user', 'hashtags', 'location', 'source', 'retweet_count'])
+    return df
