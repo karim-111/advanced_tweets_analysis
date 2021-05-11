@@ -6,6 +6,8 @@ import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+from dash_extensions.snippets import send_data_frame
+
 import pandas as pd
 # Pages
 from layouts import layout1
@@ -19,11 +21,13 @@ from Callbacks.map_location import map_location
 from Callbacks.figure_bilou import figure_bilou2
 from Callbacks.call_api_search import call_api_search, call_api_search_by_name
 from Callbacks.tree_tweets import tree_tweets
-from Callbacks.FIgPca import PcaFirst, Pour_Com, PCA3D
+from Callbacks.FIgPca import PcaFirst
 from Pages.SearchTweets import parse_contents
 from Components.Table3 import generate_table2
 #
 from API.Cleaning_Tweets import df_with_clean_text
+from API.Cleaning_Tweets import df_with_clean_text2
+from API.Cleaning_Tweets import Give_The_Graph,Give_The_Graph_Word
 
 #
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -96,79 +100,146 @@ def update_output_div(n_clicks, number, input_value, inputtttt):
 
 #
 @app.callback(Output('NMF_Topic_word', 'data'), Input('session', 'data'),
-              Input('session2', 'data'), Input('DataFrameUploaded', 'data'))
-def update_table_clean(jsonified_cleaned_data, jsonified_cleaned_data2, jsonified_cleaned_data3):
+              Input('session2', 'data'), Input('DataFrameUploaded', 'data'), Input("NumberOFTopic", 'value'))
+def update_table_clean(jsonified_cleaned_data, jsonified_cleaned_data2, jsonified_cleaned_data3, n_topic):
     if jsonified_cleaned_data:
-        return df_with_clean_text(jsonified_cleaned_data)
+        if n_topic:
+            return df_with_clean_text(jsonified_cleaned_data, n_topic)
+        else:
+            return df_with_clean_text(jsonified_cleaned_data, 2)
     else:
         if jsonified_cleaned_data2:
-            return df_with_clean_text(jsonified_cleaned_data2)
+            if n_topic:
+                return df_with_clean_text(jsonified_cleaned_data2, n_topic)
+            else:
+                return df_with_clean_text(jsonified_cleaned_data2, 2)
+
         else:
             if jsonified_cleaned_data3:
-                return df_with_clean_text(jsonified_cleaned_data3)
+                if n_topic:
+                    return df_with_clean_text(jsonified_cleaned_data3, n_topic)
+                else:
+                    return df_with_clean_text(jsonified_cleaned_data3, 2)
             else:
                 raise PreventUpdate
 
 
+## NMF
+
+@app.callback(Output('NMF', 'figure'), Output('NMF2', 'figure'), Output('NMF3', 'figure'), Output('NMF4', 'figure'),
+              Output('GaloupiNMF3', 'style'), Output('GaloupiNMF4', 'style'),
+
+              Input("NumberOFTopic", 'value'),
+              Input("NMF_Topic_word", 'data'))
+def update_table_clean(numberOfTopics, jsonified_cleaned_data):
+    if jsonified_cleaned_data:
+
+        if numberOfTopics == 2:
+            x, y = df_with_clean_text2(numberOfTopics, jsonified_cleaned_data)
+            return x, y, {}, {}, {
+                'display': 'none'}, {
+                       'display': 'none'}
+        else:
+            if numberOfTopics == 3:
+                x, y, z = df_with_clean_text2(numberOfTopics, jsonified_cleaned_data)
+                return x, y, z, {}, {
+                    'display': 'block'}, {
+                           'display': 'none'}
+            else:
+                if numberOfTopics == 4:
+                    x, y, z, w = df_with_clean_text2(numberOfTopics, jsonified_cleaned_data)
+
+                    return x, y, z, w, {
+                        'display': 'block'}, {
+                               'display': 'block'},
+    else:
+        raise PreventUpdate
+
+
+# Display Word And Topic Cosinus
+
+@app.callback(Output('TopicCosinus', 'figure'),
+              Input("NumberOFTopic", 'value'),
+              Input("NMF_Topic_word", 'data'))
+def update_table_clean(numberOfTopics, jsonified_cleaned_data):
+    if jsonified_cleaned_data:
+        fig = Give_The_Graph(numberOfTopics, jsonified_cleaned_data)
+        return fig
+    else:
+        raise PreventUpdate
+
+
+@app.callback(Output('WordCosinus', 'figure'),
+              Input("TheTopicSelected", 'value'),
+              Input("NMF_Topic_word", 'data'))
+def update_table_clean(numberOfTopics, jsonified_cleaned_data):
+    if jsonified_cleaned_data:
+        fig = Give_The_Graph_Word(numberOfTopics, jsonified_cleaned_data)
+        return fig
+    else:
+        raise PreventUpdate
 ##
 
-@app.callback(Output('ACP', 'figure'), Input('NMF_Topic_word', 'data'))
+## ACP
+@app.callback( Output("Galoupi3", 'style'), Output("HideACP", 'style'),
+              Input('NMF_Topic_word', 'data'))
 def watwat(jsonified_cleaned_data):
     if jsonified_cleaned_data:
-        return PcaFirst(jsonified_cleaned_data)
-    else:
-        raise PreventUpdate
-
-
-@app.callback(Output('ACPTREED', 'figure'), Input('NMF_Topic_word', 'data'), Input('maybe', 'n_clicks'))
-def watwat(jsonified_cleaned_data, n_clicks):
-    if n_clicks is None:
-        raise PreventUpdate
-    else:
-        if jsonified_cleaned_data:
-            return PCA3D(jsonified_cleaned_data)
-        else:
-            raise PreventUpdate
-
-
-@app.callback(Output('Pourcentage_DES_composantes', 'figure'), Input('NMF_Topic_word', 'data'))
-def watwat(jsonified_cleaned_data):
-    if jsonified_cleaned_data:
-        return Pour_Com(jsonified_cleaned_data)
+        return {'display': 'block'}, {'display': 'none'},
     else:
         raise PreventUpdate
 
 
 @app.callback(Output('output-data-upload', 'children'),
               Output('DataFrameUploaded', 'data'),
+              Output('HideDataFrame', 'style'),
+              Output('Galoupi2', 'style'),
               Input('upload-data', 'contents'),
+              Input('session', 'data'),
+              Input('session2', 'data'),
               State('upload-data', 'filename'),
-              State('upload-data', 'last_modified'))
-def update_output(list_of_contents, list_of_names, list_of_dates):
+              State('upload-data', 'last_modified'),
+              )
+def update_output(list_of_contents, jsonified_cleaned_data, jsonified_cleaned_data2, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
         print(children[0][1])
 
-        return children[0][0], children[0][1].to_json(date_format='iso', orient='split')
+        return children[0][0], children[0][1].to_json(date_format='iso', orient='split'), {'display': 'none'}, {
+            'display': 'flex'}
     else:
-        raise PreventUpdate
+        if jsonified_cleaned_data:
+            return generate_table2(jsonified_cleaned_data), [], {'display': 'none'}, {
+                'display': 'flex'}
+        else:
+            if jsonified_cleaned_data2:
+                return generate_table2(jsonified_cleaned_data2), [], {'display': 'none'}, {
+                    'display': 'flex'}
+            else:
+                raise PreventUpdate
 
 
 ###
+"""
 
 @app.callback(Output('output-data-upload2', 'children'),
+              Output('HideDataFrame', 'style'),
+              Output('Galoupi2', 'style'),
               Input('session', 'data'),
               Input('session2', 'data'))
 def update_output(jsonified_cleaned_data, jsonified_cleaned_data2):
     if jsonified_cleaned_data:
-        return generate_table2(jsonified_cleaned_data), []
+        return generate_table2(jsonified_cleaned_data), [], {'display': 'none'}, {
+            'display': 'flex'}
     else:
         if jsonified_cleaned_data2:
-            return generate_table2(jsonified_cleaned_data2), []
+            return generate_table2(jsonified_cleaned_data2), [], {'display': 'none'}, {
+            'display': 'flex'}
         else:
             raise PreventUpdate
+"""
 
 
 ##
@@ -237,6 +308,28 @@ def watwat(jsonified_cleaned_data, jsonified_cleaned_data2, jsonified_cleaned_da
                 return sentiment_tweet(jsonified_cleaned_data3)
             else:
                 raise PreventUpdate
+
+
+@app.callback(Output("download", "data"), Input("btn", "n_clicks"), Input('session', 'data'), Input('session2', 'data'),
+              Input('DataFrameUploaded', 'data'))
+def generate_csv(n_clicks, jsonified_cleaned_data, jsonified_cleaned_data2, jsonified_cleaned_data3):
+    if n_clicks is None:
+        raise PreventUpdate
+    else:
+        if jsonified_cleaned_data:
+            df = pd.read_json(jsonified_cleaned_data, orient='split')
+
+            return send_data_frame(df.to_csv, filename="some_name.csv")
+        else:
+            if jsonified_cleaned_data2:
+                df = pd.read_json(jsonified_cleaned_data2, orient='split')
+                return send_data_frame(df.to_csv, filename="some_name.csv")
+            else:
+                if jsonified_cleaned_data3:
+                    df = pd.read_json(jsonified_cleaned_data3, orient='split')
+                    return send_data_frame(df.to_csv, filename="some_name.csv")
+                else:
+                    raise PreventUpdate
 
 
 # Map Location

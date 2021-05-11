@@ -2,18 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9cf9247d-51c3-4b63-a81d-a7d2b56af8e2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/advanced_tweets_analysis.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/advanced_tweets_analysis.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/csv-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/API/Cleaning_Tweets.py" beforeDir="false" afterPath="$PROJECT_DIR$/API/Cleaning_Tweets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Scraping_Tweets.py" beforeDir="false" afterPath="$PROJECT_DIR$/API/Scraping_Tweets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/API/Utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/API/Utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Callbacks/FIgPca.py" beforeDir="false" afterPath="$PROJECT_DIR$/Callbacks/FIgPca.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Components/Table.py" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Table.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pages/Home_Page.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pages/Home_Page.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pages/SearchTweets.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pages/SearchTweets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pages/DataFrame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pages/DataFrame.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pages/NonSup.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pages/NonSup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pages/Visualisation_Tweets.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pages/Visualisation_Tweets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/htwc/0x608f356c.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/layouts.py" beforeDir="false" afterPath="$PROJECT_DIR$/layouts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

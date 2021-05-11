@@ -8,9 +8,9 @@ tab2_content = html.Div(
     children=[
         html.Div(
             id='ToHide',
-            style={'display': 'block'},
+            style={'display': 'flex'},
             children=[
-                html.H1('Data Visualisation'),
+                html.Img(className="hhhh", src=("/assets/4689040.jpg")),
             ]
         ),
         html.Div(

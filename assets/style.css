@@ -16,6 +16,14 @@ background-repeat:no-repeat;
   width: 80px;
 
 }
+.hhh{
+ height : 600px;
+  width: 600px;
+}
+.hhhh{
+ height : 700px;
+  width: 800px;
+}
 .formulaire{
 padding : 10px;
 }
@@ -31,6 +39,20 @@ font-weight: bolder;
 background-color : #8de3fb;
 color : #0f5587
 }
+.hhhhhhhhhhhZ{
+margin-top : 10px;
+margin-bottom : 10px;
+margin-right : 10px;
+
+width : 200px;
+height : 50px;
+font: italic 1.2em "Fira Sans", serif;
+font-size: 25px ;
+font-weight: bolder;
+background-color : #8de3fb;
+color : #0f5587
+}
+
 .trrrrr{
 margin : auto;
 padding : 30px;
@@ -90,8 +112,28 @@ font-size : 17px
 display:flex;
 align-items : center;
 justify-content: center;
+flex-direction : column;
+flex-wrap:wrap;
 height: 90vh;
 }
+.Tab3Content{
+display:flex;
+align-items : center;
+justify-content: center;
+flex-direction : column;
+flex-wrap:wrap;
+}
+.EnglobTwoBlock{
+display :none;
+}
+
+.FirstBlock {
+display: flex;
+flex-direction: row;
+width: 95vw;
+flex-wrap: wrap;
+}
+
 .Tab2Content2{
 display : flex;
 align-items : center;
@@ -103,14 +145,67 @@ display: none;
 }
 .Galoupi{
 border : solid 1px black;
-width : 1000px;
-margin: 50px;
+width : 850px;
+margin: 20px;
 }
+.GaloupiNMF2{
+border : solid 1px black;
+width : 850px;
+margin: 20px;
+}
+.GaloupiNMF3{
+border : solid 1px black;
+width : 850px;
+margin: 20px;
+}
+.GaloupiNMF4{
+display :none;
+border : solid 1px black;
+width : 850px;
+margin: 20px;
+}
+
 .Galoupi2{
+display:none;
 width : 1500px;
 margin: 50px;
 }
+.Galoupi3{
+display:none;
+align-items : center;
+justify-content: center;
+flex-direction : column;
+flex-wrap:wrap;
+}
+.FirstFirstBlock{
+display:flex;
+flex-direction : column;
+}
+.SecondBlock{
+display: flex;
+flex-direction: row;
+width: 95vw;
+flex-wrap: wrap;
 
+}
+.SecondSecondBlock{
+display:flex;
+flex-direction : column;
+margin-top:80px;
+}
+.NchedInput{
+align-self:center;
+justify-content:center;
+margin-top : 30px;
+width : 400px;
+
+}
+.ToDisplayDataFrame{
+display:flex;
+flex-direction : column;
+align-items:center
+
+}
 /***************Tab1**************/
 .EnglobanteSearch{
 display:flex;
@@ -157,7 +252,9 @@ align-items:center;
 justify-content:center;
 margin : 50px;
 }
-
+.HideDataFrame{
+display:flex
+}
 .select_input{
 margin-bottom : 20px;
 width : 300px;

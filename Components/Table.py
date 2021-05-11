@@ -16,6 +16,7 @@ def generate_table(dataframe):
         columns=[
             {"name": i, "id": i} for i in sorted(dataframe.columns)
         ],
+
         page_current=0,
         page_size=5,
         page_action='custom',

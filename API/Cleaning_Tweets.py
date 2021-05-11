@@ -1,16 +1,20 @@
 import re
 import string
+import plotly.express as px
 import nltk
+from sklearn.metrics.pairwise import cosine_similarity
+
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import NMF
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
+
 wn = nltk.WordNetLemmatizer()
 
 stopword = nltk.corpus.stopwords.words('english')
 
-def clean(text):
 
+def clean(text):
     tweet = str(text).lower()
     tweet = re.sub('\[.*?\_]', '', tweet)
     tweet = re.sub(r"(?:\@|http?\://|https?\://|www)\S+", "", tweet)  # Remove http links
@@ -118,30 +122,148 @@ def clean(text):
     tweet = re.sub(r"donå«t", "do not", tweet)
     return tweet
 
+
 def clean_text2(text):
-    text_wtu = ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)"," ",text).split())
+    text_wtu = ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", text).split())
     text_rc = re.sub('[0-9]+', '', text_wtu)
     text_wat = clean(text_rc)
     text_lem = wn.lemmatize(text_wat)
     return text_lem
 
-def df_with_clean_text(data) :
+
+def df_with_clean_text(data, number):
     df = pd.read_json(data, orient='split')
     df['clean_text'] = df['Text'].apply(lambda x: clean_text2(x))
     df
     # use tfidf by removing tokens that don't appear in at least 50 documents
     vect = TfidfVectorizer(min_df=3, stop_words='english')
     X = vect.fit_transform(df.clean_text)
-    #NMF
-    model = NMF(n_components=4, random_state=5)
+    # NMF
+    model = NMF(n_components=number, random_state=5)
 
     # Fit the model to TF-IDF
     model.fit(X)
 
     components_df = pd.DataFrame(model.components_, columns=vect.get_feature_names())
     print(components_df)
-
-    Topic = ['1', '2', '3', '4']
+    Topic = []
+    for i in range(number):
+        Topic.append(i + 1)
+    Topic
 
     components_df["Topic"] = Topic
     return components_df.to_json(date_format='iso', orient='split')
+
+
+def df_with_clean_text2(numberofboucle, data):
+    components_df = pd.read_json(data, orient='split')
+
+    # index = components_df.index
+    # number_of_rows = len(index)
+
+    def watttt(b):
+        # print('b',b)
+        # print("componenet",components_df)
+
+        H2 = components_df.iloc[b - 1]
+        # print('H2',H2)
+
+        H2 = pd.DataFrame(H2)
+        H3 = H2.nlargest(20, b - 1)
+        # print('H3',H3)
+
+        return H3
+
+    if numberofboucle == 2:
+        return px.bar(watttt(1)), px.bar(watttt(2))
+    else:
+        if numberofboucle == 3:
+            return px.bar(watttt(1)), px.bar(watttt(2)), px.bar(watttt(3))
+        else:
+            if numberofboucle == 4:
+                return px.bar(watttt(1)), px.bar(watttt(2)), px.bar(watttt(3)), px.bar(watttt(4))
+
+
+####
+def word2vec(word):
+    from collections import Counter
+    from math import sqrt
+
+    # count the characters in word
+    cw = Counter(word)
+    # precomputes a set of the different characters
+    sw = set(cw)
+    # precomputes the "length" of the word vector
+    lw = sqrt(sum(c * c for c in cw.values()))
+
+    # return a tuple
+    return cw, sw, lw
+
+
+def cosdis(v1, v2):
+    # which characters are common to the two words?
+    common = v1[1].intersection(v2[1])
+    # by definition of cosine distance we have
+    return sum(v1[0][ch] * v2[0][ch] for ch in common) / v1[2] / v2[2]
+
+
+####
+def Give_The_Graph(numbertoboucle, data):
+    components_df = pd.read_json(data, orient='split')
+    csim = cosine_similarity(components_df, components_df)
+    docList = []
+    for i in range(1, numbertoboucle + 1):
+        docList.append("Topic " + str(i))
+    print("dockccc", docList)
+    csimDf = pd.DataFrame(csim, index=sorted(docList), columns=sorted(docList))
+    csimDf = csimDf.values.tolist()
+    data = csimDf
+    print('data', data)
+    fig = px.imshow(data,
+                    labels=dict(x="Topic", y="Topic", color="Productivity"),
+                    x=docList,
+                    y=docList,
+                    )
+    fig.update_xaxes(side="top")
+    return fig
+####
+def Give_The_Graph_Word(number, data):
+    components_df = pd.read_json(data, orient='split')
+    H2 = components_df.iloc[number]
+    H2 = pd.DataFrame(H2)
+    H3 = H2.nlargest(20, number)
+    index = H3.index
+    index = index.tolist()
+    data = []
+    for i in index:
+        data.append(word2vec(i))
+    res = [[0 for i in range(len(index))] for j in range(len(index))]
+    for i in range(0, 19):
+        for j in range(0, 19):
+            wat = cosdis(data[i], data[j])
+            res[i][j] = wat
+
+    df = pd.DataFrame(res)
+    df
+    wat = df.values.tolist()
+    data = wat
+    fig = px.imshow(data,
+                    labels=dict(x="Topic", y="Topic", color="Productivity"),
+                    x=index,
+                    y=index,
+                    )
+    fig.update_xaxes(side="top")
+
+    return fig
+
+
+""""
+    if number_of_rows <number+1 :
+        H2 = components_df.iloc[number_of_rows -1]
+        H2 = pd.DataFrame(H2)
+        H3 = H2.nlargest(20,number_of_rows -1)
+    else :
+        H2 = components_df.iloc[number]
+        H2 = pd.DataFrame(H2)
+        H3 = H2.nlargest(20, number)
+    """
